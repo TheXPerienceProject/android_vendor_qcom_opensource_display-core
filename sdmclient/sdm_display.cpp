@@ -840,6 +840,16 @@ void SDMDisplay::BuildLayerStack() {
       layer->flags.solid_fill = true;
     }
 
+#ifdef UDFPS_ZPOS
+    if (sdm_layer->IsFodPressed()) {
+      layer->flags.fod_pressed = true;
+      layer_stack_.flags.fod_pressed_present = true;
+    } else {
+      layer->flags.fod_pressed = false;
+      layer_stack_.flags.fod_pressed_present = false;
+    }
+#endif
+
     if (!sdm_layer->IsDataSpaceSupported()) {
       layer->flags.skip = true;
       DLOGV_IF(kTagClient,
@@ -940,6 +950,7 @@ void SDMDisplay::BuildLayerStack() {
         layer->flags.cursor = true;
         layer_stack_.flags.cursor_present = true;
       }
+      layer->flags.skip = true;
     }
 
     // VTS case failure with solid layer dimming due to no support on pipe
